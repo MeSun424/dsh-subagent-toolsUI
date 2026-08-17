@@ -6,8 +6,9 @@ import {
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import TYPERT_REMOTE from '../lib/typert.remote-client.js'
 
+// Keep the original key so renaming the package does not reset session choices.
 const STORAGE_PREFIX = 'dsh-subagent-tools.selection.v1:'
-const CSS_ID = 'dsh-subagent-tools/client'
+const CSS_ID = 'dsh-subagent-tools-ui/client'
 const INHERIT = Object.freeze({ mode: 'inherit' })
 
 const css = `
@@ -42,7 +43,7 @@ const css = `
 function installStyles() {
   if (document.querySelector(`style[data-plugin-css="${CSS_ID}"]`) !== null) return
   const style = document.createElement('style')
-  style.dataset.plugin = 'dsh-subagent-tools'
+  style.dataset.plugin = 'dsh-subagent-tools-ui'
   style.dataset.pluginCss = CSS_ID
   style.textContent = css
   document.head.appendChild(style)
@@ -200,7 +201,7 @@ function SubagentModelSelect({
       'aria-expanded': open,
       onClick: () => open ? setOpen(false) : show(),
     },
-    React.createElement(IconBranchOutline16, { className: 'dst-icon' }),
+    React.createElement(IconBranchOutline16, { className: 'dst-icon', size: 12 }),
     React.createElement('span', { className: 'dst-label' }, label),
     React.createElement(IconChevronDownOutline14, {
       className: open ? 'dst-chevron dst-chevron-open' : 'dst-chevron',
@@ -269,7 +270,7 @@ export const inject = ['remote', 'connection', 'slots', 'sessions', 'modelDirect
 export async function apply(ctx) {
   installStyles()
   const disposeRemote = await ctx.remote.$mount(TYPERT_REMOTE)
-  ctx.effect(() => disposeRemote, 'dsh-subagent-tools: remote contribution')
+  ctx.effect(() => disposeRemote, 'dsh-subagent-tools-ui: remote contribution')
   const invoke = (method, args) => ctx.connection.rpc.call('/api', `subagentTools/${method}`, { args })
 
   const registerSelector = () => ctx.slots.inject('conversation.input.right', () => ctx.slots.register({
@@ -325,5 +326,5 @@ export async function apply(ctx) {
       unsubscribe()
       disposeSelector?.()
     }
-  }, 'dsh-subagent-tools: top-level selector visibility')
+  }, 'dsh-subagent-tools-ui: top-level selector visibility')
 }

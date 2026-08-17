@@ -1,4 +1,4 @@
-# dsh-subagent-tools bundle patch.
+# dsh-subagent-tools-ui bundle patch.
 #
 # Installs the process-level model-selection service and Web client. The service
 # shadows `subagent` and `subagent_fork` inside every top-level Agent scope, so
@@ -10,4 +10,4 @@
 
 - insert:
     - id: subagent-tools-service
-      name: dsh-subagent-tools
+      name: dsh-subagent-tools-ui

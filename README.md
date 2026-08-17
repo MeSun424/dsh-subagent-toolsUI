@@ -1,4 +1,4 @@
-# dsh-subagent-tools
+# dsh-subagent-toolsUI
 
 User-controlled subagent models and adaptive reasoning for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
@@ -32,7 +32,7 @@ The result is a practical split of responsibilities: the user chooses where work
 Install the repository with the Harness plugin command:
 
 ```sh
-dsh plugin --profile web add /path/to/dsh-subagent-tools
+dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 ```
 
 You can use a cloned repository path or a Git repository URL supported by your Harness installation. Restart the web profile and create a new session after installation. A session keeps the plugin composition it was created with, so existing sessions may need to be reopened.

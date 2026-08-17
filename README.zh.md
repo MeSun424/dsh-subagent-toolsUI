@@ -1,4 +1,4 @@
-# dsh-subagent-tools
+# dsh-subagent-toolsUI
 
 为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 提供可由用户控制的子代理模型选择和按任务调整的思考强度。
 
@@ -32,7 +32,7 @@
 使用 Harness 插件命令安装仓库：
 
 ```sh
-dsh plugin --profile web add /path/to/dsh-subagent-tools
+dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 ```
 
 可以使用本地克隆目录，也可以使用当前 Harness 支持的 Git 仓库地址。安装后重启 web profile，并新建一个会话。会话在创建时确定插件组合，已经存在的会话可能需要重新打开。

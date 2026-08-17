@@ -1,4 +1,4 @@
-# install-preset.ps1 — make dsh-subagent-tools available to Web sessions.
+# install-preset.ps1 — make dsh-subagent-tools-ui available to Web sessions.
 #
 # WHY THIS IS NEEDED
 #   In the `web` profile, agent tools are provided by the mounted agent PRESET
@@ -14,7 +14,7 @@
 #      $DSH_HOME/.agent-presets/standard-plus (user root, writable).
 #   2. Rewrites the copy's delegation rows so `tool-subagent` /
 #      `tool-subagent-fork` (and the disabled codex/claude-code templates)
-#      point at `dsh-subagent-tools` instead of @deepseek-ai/dsh-tool-subagent.
+#      point at `dsh-subagent-tools-ui` instead of @deepseek-ai/dsh-tool-subagent.
 #   3. Switches the default preset in $DSH_HOME/settings.yaml to `standard-plus`
 #      so NEW Web sessions use the enhanced tools.
 #
@@ -57,7 +57,7 @@ $targetFile = Join-Path $targetDir 'agent.cordis.yml'
 # ── already adapted? skip ────────────────────────────────────────────────
 if (Test-Path $targetFile) {
   $existing = Get-Content $targetFile -Raw
-  if ($existing -match "name: 'dsh-subagent-tools/tool'") {
+  if ($existing -match "name: 'dsh-subagent-tools-ui/tool'") {
     Write-Host "[skip] standard-plus already adapted."
     exit 0
   }
@@ -70,17 +70,17 @@ Copy-Item $standardFile $targetFile -Force
 # ── rewrite delegation rows to this package ──────────────────────────────
 $content = Get-Content $targetFile -Raw
 $old = "      name: '@deepseek-ai/dsh-tool-subagent'"
-$new = "      name: 'dsh-subagent-tools/tool'"
+$new = "      name: 'dsh-subagent-tools-ui/tool'"
 $count = ([regex]::Matches($content, [regex]::Escape($old))).Count
 if ($count -eq 0) {
   throw "No delegation rows to rewrite — anchor '$old' not found in $targetFile. Version mismatch?"
 }
 $content = $content.Replace($old, $new)
 Set-Content -Path $targetFile -Value $content -Encoding UTF8 -NoNewline
-Write-Host "[ok] rewrote $count delegation row(s) -> dsh-subagent-tools/tool"
+Write-Host "[ok] rewrote $count delegation row(s) -> dsh-subagent-tools-ui/tool"
 
 # ── preset.yml metadata ──────────────────────────────────────────────────
-$meta = "name: standard-plus`ndescription: standard preset with dsh-subagent-tools delegation tools`n"
+$meta = "name: standard-plus`ndescription: standard preset with dsh-subagent-tools-ui delegation tools`n"
 Set-Content -Path (Join-Path $targetDir 'preset.yml') -Value $meta -Encoding UTF8 -NoNewline
 Write-Host "[ok] wrote preset.yml"
 

@@ -1,6 +1,6 @@
 {
-  "name": "dsh-subagent-tools",
-  "version": "0.4.3-local",
+  "name": "dsh-subagent-tools-ui",
+  "version": "0.4.5-local",
   "description": "User-controlled per-session subagent model routing and adaptive reasoning for DeepSeek Harness.",
   "type": "module",
   "main": "lib/service-plugin.js",
@@ -50,6 +50,14 @@
   "dependencies": {
     "yaml": "^2.8.1",
     "zod": "^4.4.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MeSun424/dsh-subagent-toolsUI.git"
+  },
+  "homepage": "https://github.com/MeSun424/dsh-subagent-toolsUI#readme",
+  "bugs": {
+    "url": "https://github.com/MeSun424/dsh-subagent-toolsUI/issues"
   },
   "dsh": {
     "client": {

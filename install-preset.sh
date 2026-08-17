@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-preset.sh — make dsh-subagent-tools available to Web sessions.
+# install-preset.sh — make dsh-subagent-tools-ui available to Web sessions.
 #
 # WHY THIS IS NEEDED
 #   In the `web` profile, agent tools are provided by the mounted agent PRESET
@@ -7,7 +7,7 @@
 #   rows pointing at @deepseek-ai/dsh-tool-subagent), NOT by the host plane.
 #   A bundle patch that inserts rows into the host plane is invisible to Web
 #   sessions. This script copies `standard` to a user preset (`standard-plus`),
-#   rewrites its delegation rows to point at `dsh-subagent-tools`, and switches
+#   rewrites its delegation rows to point at `dsh-subagent-tools-ui`, and switches
 #   the default preset.
 #
 # Usage:  ./install-preset.sh
@@ -45,7 +45,7 @@ TARGET_DIR="$PRESET_ROOT/standard-plus"
 TARGET_FILE="$TARGET_DIR/agent.cordis.yml"
 mkdir -p "$TARGET_DIR"
 
-if [[ -f "$TARGET_FILE" ]] && grep -qF "name: 'dsh-subagent-tools/tool'" "$TARGET_FILE"; then
+if [[ -f "$TARGET_FILE" ]] && grep -qF "name: 'dsh-subagent-tools-ui/tool'" "$TARGET_FILE"; then
   echo "[skip] standard-plus already adapted."
   exit 0
 fi
@@ -57,7 +57,7 @@ path = sys.argv[1]
 with open(path, 'r', encoding='utf-8') as f:
     content = f.read()
 old = "      name: '@deepseek-ai/dsh-tool-subagent'"
-new = "      name: 'dsh-subagent-tools/tool'"
+new = "      name: 'dsh-subagent-tools-ui/tool'"
 count = content.count(old)
 if count == 0:
     print(f'[ERROR] no delegation rows to rewrite in {path}', file=sys.stderr)
@@ -65,10 +65,10 @@ if count == 0:
 content = content.replace(old, new)
 with open(path, 'w', encoding='utf-8', newline='') as f:
     f.write(content)
-print(f'[ok] rewrote {count} delegation row(s) -> dsh-subagent-tools/tool')
+print(f'[ok] rewrote {count} delegation row(s) -> dsh-subagent-tools-ui/tool')
 PY
 
-printf 'name: standard-plus\ndescription: standard preset with dsh-subagent-tools delegation tools\n' \
+printf 'name: standard-plus\ndescription: standard preset with dsh-subagent-tools-ui delegation tools\n' \
   > "$TARGET_DIR/preset.yml"
 echo "[ok] wrote preset.yml"
 
