@@ -1,0 +1,13 @@
+# dsh-subagent-tools bundle patch.
+#
+# Installs the process-level model-selection service and Web client. The service
+# shadows `subagent` and `subagent_fork` inside every top-level Agent scope, so
+# all modes use the same routing without editing any preset or official package.
+#
+# Install: dsh plugin --profile web add <this package>
+#   (npm registry, a local path, or github:owner/repo#ref)
+# Restart `dsh --profile web` after installing.
+
+- insert:
+    - id: subagent-tools-service
+      name: dsh-subagent-tools
