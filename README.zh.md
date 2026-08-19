@@ -5,6 +5,12 @@
 | [English](README.md) | [中文](README.zh.md) |
 | --- | --- |
 
+## 界面展示
+
+模型选择器直接集成在 Harness 对话工具栏中，可以继续继承主模型，也可以为后续新建的子代理选择固定模型。
+
+![子代理模型选择器](docs/images/subagent-model-selector.png)
+
 ## 功能
 
 - **按会话选择子代理模型。** 选择器直接使用 Harness 的模型目录，并将“继承”固定放在列表顶部。

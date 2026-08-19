@@ -5,6 +5,12 @@ User-controlled subagent models and adaptive reasoning for [DeepSeek Harness](ht
 | [English](README.md) | [中文](README.zh.md) |
 | --- | --- |
 
+## In the interface
+
+The model selector is available directly in the Harness conversation toolbar, where you can keep inheriting the parent model or choose a model for future subagents.
+
+![Subagent model selector](docs/images/subagent-model-selector.png)
+
 ## What it does
 
 - **Choose the subagent model per session.** The selector uses the same model directory as Harness, with `Inherit` pinned at the top.
