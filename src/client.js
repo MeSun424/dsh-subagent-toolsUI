@@ -1,10 +1,46 @@
 import React from 'react'
-import {
-  IconBranchOutline16,
-  IconCheckOutline16,
-  IconChevronDownOutline14,
-} from '@deepseek-ai/dsh-client-ui-primitives'
 import TYPERT_REMOTE from '../lib/typert.remote-client.js'
+
+// Harness 0.1.1-rc.1 no longer ships the old primitives package. Keep these
+// small controls self-contained so the selector bundle has no stale UI import.
+function SvgIcon({ children, viewBox = '0 0 16 16', ...props }) {
+  return React.createElement('svg', {
+    ...props,
+    width: props.width ?? 16,
+    height: props.height ?? 16,
+    viewBox,
+    fill: 'none',
+    xmlns: 'http://www.w3.org/2000/svg',
+    'aria-hidden': 'true',
+  }, children)
+}
+
+function IconBranch({ className }) {
+  return SvgIcon({ className, width: 12, height: 12, children: React.createElement('path', {
+      d: 'M5 3.25a1.75 1.75 0 1 0-1.5 1.73v4.04A1.75 1.75 0 1 0 5 10.75V8h4.25v1.02a1.75 1.75 0 1 0 1.5 0V6.98a1.75 1.75 0 0 0-1.5 0V6.5H5V4.98A1.75 1.75 0 0 0 5 3.25Z',
+      fill: 'currentColor',
+    })})
+}
+
+function IconCheck({ className }) {
+  return SvgIcon({ className, children: React.createElement('path', {
+      d: 'm3.25 8.25 3 3 6.5-6.5',
+      stroke: 'currentColor',
+      strokeWidth: 1.75,
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+    })})
+}
+
+function IconChevron({ className }) {
+  return SvgIcon({ className, width: 14, height: 14, children: React.createElement('path', {
+      d: 'm4 6 4 4 4-4',
+      stroke: 'currentColor',
+      strokeWidth: 1.5,
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+    })})
+}
 
 // Keep the original key so renaming the package does not reset session choices.
 const STORAGE_PREFIX = 'dsh-subagent-tools.selection.v1:'
@@ -201,9 +237,9 @@ function SubagentModelSelect({
       'aria-expanded': open,
       onClick: () => open ? setOpen(false) : show(),
     },
-    React.createElement(IconBranchOutline16, { className: 'dst-icon', size: 12 }),
+    React.createElement(IconBranch, { className: 'dst-icon' }),
     React.createElement('span', { className: 'dst-label' }, label),
-    React.createElement(IconChevronDownOutline14, {
+    React.createElement(IconChevron, {
       className: open ? 'dst-chevron dst-chevron-open' : 'dst-chevron',
     })),
     open && React.createElement('div', {
@@ -228,7 +264,7 @@ function SubagentModelSelect({
       React.createElement('span', { className: 'dst-copy' },
         React.createElement('span', { className: 'dst-name' }, '继承')),
       React.createElement('span', { className: 'dst-check' },
-        selection.mode === 'inherit' ? React.createElement(IconCheckOutline16) : null))),
+        selection.mode === 'inherit' ? React.createElement(IconCheck) : null))),
     React.createElement('div', { className: 'dst-groups scrollable' },
       directoryState.groups.map((group) => React.createElement('section', {
         key: group.id,
@@ -255,7 +291,7 @@ function SubagentModelSelect({
           model.description === undefined ? null
             : React.createElement('span', { className: 'dst-description' }, model.description)),
         React.createElement('span', { className: 'dst-check' },
-          selected ? React.createElement(IconCheckOutline16) : null))
+          selected ? React.createElement(IconCheck) : null))
       }))),
       directoryState.status === 'loading' && choices === 0
         ? React.createElement('div', { className: 'dst-status' }, '正在加载模型...')

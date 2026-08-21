@@ -57,7 +57,7 @@ dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 
 ## 兼容性
 
-当前版本面向 DeepSeek Harness `0.1.0-rc.6`。Harness 仍在持续演进；升级后如模型选择或子代理接口发生变化，请重新验证插件。
+当前版本面向 DeepSeek Harness `0.1.1-rc.1`。Web 选择器已移除对已删除 `dsh-client-ui-primitives` 包的依赖，图标由插件自包含，升级后仍建议重新验证模型选择和子代理接口。
 
 ## 许可证与来源
 

@@ -57,7 +57,7 @@ The parent AI is told whether the selected route has confirmed image-input suppo
 
 ## Compatibility
 
-This release targets DeepSeek Harness `0.1.0-rc.6`. Harness is still evolving; recheck the plugin after upgrading to a release with changed model-selection or subagent APIs.
+This release targets DeepSeek Harness `0.1.1-rc.1`. The Web selector is bundled without the removed `dsh-client-ui-primitives` package and keeps its icons self-contained.
 
 ## License and attribution
 

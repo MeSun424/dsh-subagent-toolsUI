@@ -1,8 +1,12 @@
 {
   "name": "dsh-subagent-tools-ui",
-  "version": "0.4.5-local",
+  "version": "0.4.6-local",
   "description": "User-controlled per-session subagent model routing and adaptive reasoning for DeepSeek Harness.",
   "type": "module",
+  "scripts": {
+    "build:client": "node scripts/build-client.mjs",
+    "pack:local": "npm run build:client && npm pack"
+  },
   "main": "lib/service-plugin.js",
   "exports": {
     ".": "./lib/service-plugin.js",
@@ -18,6 +22,7 @@
     "cordis.patch.yml",
     "install-preset.ps1",
     "install-preset.sh",
+    "scripts",
     "README.md",
     "README.zh.md",
     "LICENSE"
@@ -31,19 +36,18 @@
   ],
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-subagent": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-agent": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-home-paths": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-typert-protocol": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-session": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-jobs": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-conversation": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-model-selection": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-primitives": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-api-remotes": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-tools": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-subagent": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-agent": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-llm": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-home-paths": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-typert-protocol": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-session": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-jobs": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-client-ui-conversation": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-client-ui-model-selection": "^0.1.1-rc.1",
+    "@deepseek-ai/dsh-api-remotes": "^0.1.1-rc.1",
     "@deepseek-ai/schemastery": "^3.18.1",
     "react": "^18.2.0"
   },
