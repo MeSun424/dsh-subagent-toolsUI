@@ -16,7 +16,7 @@ function SvgIcon({ children, viewBox = '0 0 16 16', ...props }) {
 }
 
 function IconBranch({ className }) {
-  return SvgIcon({ className, width: 12, height: 12, children: React.createElement('path', {
+  return SvgIcon({ className, width: 15, height: 15, children: React.createElement('path', {
       d: 'M5 3.25a1.75 1.75 0 1 0-1.5 1.73v4.04A1.75 1.75 0 1 0 5 10.75V8h4.25v1.02a1.75 1.75 0 1 0 1.5 0V6.98a1.75 1.75 0 0 0-1.5 0V6.5H5V4.98A1.75 1.75 0 0 0 5 3.25Z',
       fill: 'currentColor',
     })})
@@ -54,6 +54,7 @@ const css = `
 .dst-trigger:focus-visible{box-shadow:0 0 0 2px var(--dsw-alias-border-l3)}
 .dst-trigger:disabled{color:var(--dsw-alias-label-dimmed);cursor:default;background:transparent}
 .dst-icon,.dst-chevron{flex:none;color:var(--dsw-alias-label-caption)}
+.dst-icon{transform:translate(1px,1px)}
 .dst-chevron{transition:transform .12s}
 .dst-chevron-open{transform:rotate(180deg)}
 .dst-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
