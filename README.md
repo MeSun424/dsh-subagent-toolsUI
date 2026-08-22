@@ -43,6 +43,8 @@ dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 
 You can use a cloned repository path or a Git repository URL supported by your Harness installation. Restart the web profile and create a new session after installation. A session keeps the plugin composition it was created with, so existing sessions may need to be reopened.
 
+If a child run fails with `Cannot read properties of undefined (reading 'prepare')`, check that the Web profile resolves the same `@deepseek-ai/dsh-tools` package instance as the Harness host. Two separately installed copies can carry different runtime symbols even when their versions match. Remove the profile-local duplicate or link it to the host package, then restart the Web profile and create a new session. Do not copy private paths, credentials, or session data into this repository.
+
 ## Using the selector
 
 1. Open the subagent model selector in the conversation toolbar.

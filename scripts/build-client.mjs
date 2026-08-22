@@ -6,7 +6,7 @@ import { spawn } from 'node:child_process'
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)))
 const zodCandidates = [
   process.env.DSH_ZOD_ENTRY,
-  '/opt/homebrew/lib/node_modules/@deepseek-ai/dsh/node_modules/zod/index.js',
+  process.env.DSH_ZOD_ROOT ? resolve(process.env.DSH_ZOD_ROOT, 'index.js') : undefined,
   resolve(root, 'node_modules/zod/index.js'),
 ].filter(Boolean)
 
@@ -20,7 +20,7 @@ for (const candidate of zodCandidates) {
     // Try the next local Harness installation.
   }
 }
-if (zodEntry === undefined) throw new Error('Unable to locate zod. Set DSH_ZOD_ENTRY to zod/index.js.')
+if (zodEntry === undefined) throw new Error('Unable to locate zod. Set DSH_ZOD_ENTRY or DSH_ZOD_ROOT.')
 
 const args = [
   '--yes',
