@@ -1,7 +1,7 @@
 import React from 'react'
 import TYPERT_REMOTE from '../lib/typert.remote-client.js'
 
-// Harness 0.1.1-rc.1 no longer ships the old primitives package. Keep these
+// Harness 0.1.2 no longer ships the old primitives package. Keep these
 // small controls self-contained so the selector bundle has no stale UI import.
 function SvgIcon({ children, viewBox = '0 0 16 16', ...props }) {
   return React.createElement('svg', {

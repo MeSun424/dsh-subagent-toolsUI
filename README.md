@@ -51,7 +51,7 @@ If a child run fails with `Cannot read properties of undefined (reading 'prepare
 2. Choose **Inherit** to follow the parent model, or choose a fixed model for future children in this session.
 3. Leave the selector unchanged to keep the parent route. Change it at any time; the next child uses the new choice.
 
-The parent AI can set `reasoningEffort` for each new child. The plugin does not assume every model supports the same levels: only the selected model's published values are used. For example, a DeepSeek V4 Flash route may expose `off`, `high`, and `max`.
+The parent AI can set `reasoning_effort` for each new child (`reasoningEffort` remains accepted for older prompts). The plugin does not assume every model supports the same levels: only the selected model's published values are used. For example, a DeepSeek V4 Flash route may expose `off`, `high`, and `max`.
 
 ## Multimodal handling
 
@@ -59,7 +59,7 @@ The parent AI is told whether the selected route has confirmed image-input suppo
 
 ## Compatibility
 
-This release targets DeepSeek Harness `0.1.1-rc.1`. The Web selector is bundled without the removed `dsh-client-ui-primitives` package and keeps its icons self-contained.
+This release targets DeepSeek Harness `0.1.2-alpha.1` and later releases that keep the 0.1.2 client and subagent contracts. The Web selector uses the 0.1.2 session/model-directory services and does not inject the removed `dsh-client-runtime` package. The server tool uses the 0.1.2 `start`/`startContinuable` and `agentOptions` interfaces, including startup validation through `llm.resolveCallConfig` when available.
 
 ## License and attribution
 

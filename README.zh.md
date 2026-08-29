@@ -51,7 +51,7 @@ dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 2. 选择“继承”以跟随主模型，或选择一个固定模型供本会话后续新建的子代理使用。
 3. 保持“继承”即可继续使用主模型。选择可以在会话中随时更改，下一次新建的子代理会使用新的选择。
 
-主 AI 可以在每次新建子代理时设置 `reasoningEffort`。插件不会假定所有模型都有相同档位，只使用当前模型公布的值。例如，DeepSeek V4 Flash 路由可能提供 `off`、`high` 和 `max`。
+主 AI 可以在每次新建子代理时设置 `reasoning_effort`（旧提示中的 `reasoningEffort` 仍然支持）。插件不会假定所有模型都有相同档位，只使用当前模型公布的值。例如，DeepSeek V4 Flash 路由可能提供 `off`、`high` 和 `max`。
 
 ## 多模态处理
 
@@ -59,7 +59,7 @@ dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 
 ## 兼容性
 
-当前版本面向 DeepSeek Harness `0.1.1-rc.1`。Web 选择器已移除对已删除 `dsh-client-ui-primitives` 包的依赖，图标由插件自包含，升级后仍建议重新验证模型选择和子代理接口。
+当前版本面向 DeepSeek Harness `0.1.2-alpha.1` 及后续保持 0.1.2 客户端与子代理契约的版本。Web 选择器使用 0.1.2 的会话与模型目录服务，不再注入已删除的 `dsh-client-runtime` 包；服务端工具使用 0.1.2 的 `start`/`startContinuable` 和 `agentOptions` 接口，并在运行时提供 `llm.resolveCallConfig` 时于启动前校验路由。
 
 ## 许可证与来源
 
