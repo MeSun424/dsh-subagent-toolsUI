@@ -1,62 +1,49 @@
 # dsh-subagent-toolsUI
 
-User-controlled subagent model lock for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 0.1.5 and later.
+Pick the model your subagents use, from the DeepSeek Harness toolbar.
 
-| [English](README.md) | [中文](README.zh.md) |
-| --- | --- |
-
-## In the interface
-
-The selector lives in the conversation toolbar. Keep inheriting the parent model, or lock a model for future subagents in this session.
+English is the default. [中文说明](README.zh.md)
 
 ![Subagent model selector](docs/images/subagent-model-selector.png)
 
-## What it does
+DeepSeek Harness 0.1.5 can let the main model choose a subagent model. That is a global list, and the main model still makes the call. Forks also stay on the parent model unless you change them.
 
-Harness 0.1.5 already lets the parent model pick a child route from a host allowlist. This plugin keeps that official runtime and adds a **per-session user lock** on top of it.
+This plugin puts the choice in the current chat. You can inherit the parent model, or lock a model for later subagents in that session. The main model can still pick thinking strength. It should not invent a model id.
 
-- **The user owns the child route.** Inherit the parent model, or pin a model for later children.
-- **The parent AI owns effort.** Each call can still set `reasoning_effort` (`reasoningEffort` is accepted too).
-- **Spawn and fork both honor the lock.** A locked route wins over `provider` / `model` arguments, including forks that would otherwise stay on the parent route.
-- **Official tools keep doing the work.** `subagent`, `subagent_fork`, background/continuable jobs, and `list_subagent_models` stay on `@deepseek-ai/dsh-tool-subagent`.
-- **Host allowlist is still respected.** If Harness settings enable subagent model selection, the toolbar only shows those routes.
-- **Capability notices stay.** The parent AI sees the current route, published efforts, and confirmed image-input support. Unknown image support is treated as text-only.
-- **Useful extras remain.** `persona`, `toolFilter`, and `backend` (spawn/fork) still work per call.
+## What you get
 
-Changing the selector only affects children created afterwards. Running children keep the route they started with.
+- A selector in the conversation toolbar
+- Inherit the parent model, or lock one model for later subagents
+- Spawn and fork both follow that lock
+- Thinking strength is still chosen per task
+- If Harness has an allowlist turned on, the selector only shows those models
+- The main model is told whether the chosen model can take images; if that is unknown, treat it as text-only
+- Existing extras still work: persona, tool filter, and spawn/fork backend
 
-## Why the official setting is not a replacement
+A change only applies to subagents created after that. Ones already running keep the model they started with.
 
-The official 0.1.5 control is a **global allowlist**. The parent model then chooses a route from that list, and forks stay on the parent route by default.
+## Install
 
-This plugin is a **session lock in the toolbar**. The user chooses inherit or a fixed model; the parent AI must not invent a model id, and forks follow the same lock.
-
-Use both if you want: Harness can limit which models are allowed, while this plugin decides which allowed model a given conversation actually uses.
-
-## Installation
+Needs DeepSeek Harness 0.1.5 or later.
 
 ```sh
 dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 ```
 
-A local clone or another Git URL that your Harness install accepts also works. Restart the web profile and open a new session afterwards. Existing sessions keep the composition they were created with.
+Restart the web profile, then open a new chat. Older chats keep whatever they were created with.
 
-Do not point agent presets at this package. Leave `subagent` / `subagent_fork` on `@deepseek-ai/dsh-tool-subagent`. Older 0.4.10 installs that created a `standard-plus` preset should switch the default preset back to `standard`.
+If an older version of this plugin created a `standard-plus` preset, switch the default preset back to `standard`. Leave the official subagent tools as they are.
 
-## Using the selector
+## Use
 
-1. Open the subagent model control in the conversation toolbar.
-2. Choose **Inherit** to follow the parent model, or choose a fixed model for later children.
-3. Change it whenever you want; only the next child picks up the new choice.
+1. Open a chat and look at the toolbar next to the input.
+2. Leave it on Inherit, or pick a model for later subagents.
+3. Change it whenever you want. Only the next subagent uses the new choice.
 
-The parent AI can set `reasoning_effort` per child. Only values published by the selected model are valid. DeepSeek V4 Flash, for example, may expose `off`, `high`, and `max`.
+When the main model starts a subagent, it can set `reasoning_effort`. Use a value the selected model actually publishes, such as `off`, `high`, or `max` on DeepSeek V4 Flash.
 
-## Compatibility
+## Notes
 
-This release targets DeepSeek Harness `0.1.5-rc.1` and later builds that keep the official `dsh-tool-subagent` model-selection contract. It does not patch Harness source, rewrite presets, or replace the official spawn/fork runtime.
+This has been used on macOS with the Harness web profile. Windows and Linux have not been tested.
 
-Tested on macOS with the Harness web profile. Windows and Linux are untested.
-
-## License
-
-MIT License. This project started from [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools) and now layers session-level locking, effort routing, capability notices, and toolbar UI on the official 0.1.5 tools.
+MIT license. Based on [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools).
