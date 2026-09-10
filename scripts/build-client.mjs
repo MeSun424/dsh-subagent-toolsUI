@@ -1,4 +1,4 @@
-import { access } from 'node:fs/promises'
+import { access, readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { spawn } from 'node:child_process'
@@ -46,3 +46,8 @@ await new Promise((resolveBuild, rejectBuild) => {
     else rejectBuild(new Error(`esbuild exited with code ${code}`))
   })
 })
+
+const outputPath = resolve(root, 'lib/client.js')
+const bundle = await readFile(outputPath, 'utf8')
+const sanitizedBundle = bundle.replace(/^\/\/ .*\/zod\//gm, '// zod/')
+if (sanitizedBundle !== bundle) await writeFile(outputPath, sanitizedBundle)

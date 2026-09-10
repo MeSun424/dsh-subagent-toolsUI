@@ -1,66 +1,62 @@
 # dsh-subagent-toolsUI
 
-User-controlled subagent models and adaptive reasoning for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
+User-controlled subagent model lock for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 0.1.5 and later.
 
 | [English](README.md) | [中文](README.zh.md) |
 | --- | --- |
 
 ## In the interface
 
-The model selector is available directly in the Harness conversation toolbar, where you can keep inheriting the parent model or choose a model for future subagents.
+The selector lives in the conversation toolbar. Keep inheriting the parent model, or lock a model for future subagents in this session.
 
 ![Subagent model selector](docs/images/subagent-model-selector.png)
 
 ## What it does
 
-- **Choose the subagent model per session.** The selector uses the same model directory as Harness, with `Inherit` pinned at the top.
-- **Inherit the parent model by default.** New sessions start without changing the parent route.
-- **Lock future children to a selected model.** Changing the selection affects subagents created afterwards. Children that are already running keep the model they started with.
-- **Let the parent AI choose reasoning effort.** Each delegation can use an effort published by the selected model, such as `off`, `high`, or `max`.
-- **Expose model capabilities to the parent AI.** The current route, available effort levels, and confirmed image-input support are made available for task planning. Unknown image support is treated as text-only.
-- **Keep the controls available across top-level Harness modes.** The feature is not tied to a single custom preset.
-- **Fit the Harness interface.** The selector uses native icons, layout slots, and theme variables, so it follows light and dark themes without a separate dashboard.
-- **Retain the useful delegation controls.** `persona`, `toolFilter`, and delegation backend selection remain available for each child.
+Harness 0.1.5 already lets the parent model pick a child route from a host allowlist. This plugin keeps that official runtime and adds a **per-session user lock** on top of it.
 
-## Why it is different
+- **The user owns the child route.** Inherit the parent model, or pin a model for later children.
+- **The parent AI owns effort.** Each call can still set `reasoning_effort` (`reasoningEffort` is accepted too).
+- **Spawn and fork both honor the lock.** A locked route wins over `provider` / `model` arguments, including forks that would otherwise stay on the parent route.
+- **Official tools keep doing the work.** `subagent`, `subagent_fork`, background/continuable jobs, and `list_subagent_models` stay on `@deepseek-ai/dsh-tool-subagent`.
+- **Host allowlist is still respected.** If Harness settings enable subagent model selection, the toolbar only shows those routes.
+- **Capability notices stay.** The parent AI sees the current route, published efforts, and confirmed image-input support. Unknown image support is treated as text-only.
+- **Useful extras remain.** `persona`, `toolFilter`, and `backend` (spawn/fork) still work per call.
 
-Most DSH subagent extensions stop at a static preset or a one-call override. This plugin makes model routing a normal part of the session workflow:
+Changing the selector only affects children created afterwards. Running children keep the route they started with.
 
-- The **user controls the route** from the conversation UI instead of editing a preset or relying on the parent model to invent a model id.
-- The **parent AI controls effort per task**, using only the levels the selected model actually reports.
-- A model change is **forward-looking and predictable**: it applies to new children and never interrupts children already in progress.
-- The same integration can be used from different top-level modes, so a deployment does not need a separate copy of the subagent setup for every mode.
+## Why the official setting is not a replacement
 
-The result is a practical split of responsibilities: the user chooses where work runs, while the parent AI decides how much reasoning each new child needs.
+The official 0.1.5 control is a **global allowlist**. The parent model then chooses a route from that list, and forks stay on the parent route by default.
+
+This plugin is a **session lock in the toolbar**. The user chooses inherit or a fixed model; the parent AI must not invent a model id, and forks follow the same lock.
+
+Use both if you want: Harness can limit which models are allowed, while this plugin decides which allowed model a given conversation actually uses.
 
 ## Installation
-
-Install the repository with the Harness plugin command:
 
 ```sh
 dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 ```
 
-You can use a cloned repository path or a Git repository URL supported by your Harness installation. Restart the web profile and create a new session after installation. A session keeps the plugin composition it was created with, so existing sessions may need to be reopened.
+A local clone or another Git URL that your Harness install accepts also works. Restart the web profile and open a new session afterwards. Existing sessions keep the composition they were created with.
 
-If a child run fails with `Cannot read properties of undefined (reading 'prepare')`, check that the Web profile resolves the same `@deepseek-ai/dsh-tools` package instance as the Harness host. Two separately installed copies can carry different runtime symbols even when their versions match. Remove the profile-local duplicate or link it to the host package, then restart the Web profile and create a new session. Do not copy private paths, credentials, or session data into this repository.
+Do not point agent presets at this package. Leave `subagent` / `subagent_fork` on `@deepseek-ai/dsh-tool-subagent`. Older 0.4.10 installs that created a `standard-plus` preset should switch the default preset back to `standard`.
 
 ## Using the selector
 
-1. Open the subagent model selector in the conversation toolbar.
-2. Choose **Inherit** to follow the parent model, or choose a fixed model for future children in this session.
-3. Leave the selector unchanged to keep the parent route. Change it at any time; the next child uses the new choice.
+1. Open the subagent model control in the conversation toolbar.
+2. Choose **Inherit** to follow the parent model, or choose a fixed model for later children.
+3. Change it whenever you want; only the next child picks up the new choice.
 
-The parent AI can set `reasoning_effort` for each new child (`reasoningEffort` remains accepted for older prompts). The plugin does not assume every model supports the same levels: only the selected model's published values are used. For example, a DeepSeek V4 Flash route may expose `off`, `high`, and `max`.
-
-## Multimodal handling
-
-The parent AI is told whether the selected route has confirmed image-input support. Missing or unverified capability information is handled conservatively as text-only, so visual tasks are not sent to a model that has not declared image support.
+The parent AI can set `reasoning_effort` per child. Only values published by the selected model are valid. DeepSeek V4 Flash, for example, may expose `off`, `high`, and `max`.
 
 ## Compatibility
 
-This release targets DeepSeek Harness `0.1.2-alpha.1` and later releases that keep the 0.1.2 client and subagent contracts. The Web selector uses the 0.1.2 session/model-directory services and does not inject the removed `dsh-client-runtime` package. The server tool uses the 0.1.2 `start`/`startContinuable` and `agentOptions` interfaces, including startup validation through `llm.resolveCallConfig` when available.
+This release targets DeepSeek Harness `0.1.5-rc.1` and later builds that keep the official `dsh-tool-subagent` model-selection contract. It does not patch Harness source, rewrite presets, or replace the official spawn/fork runtime.
 
-## License and attribution
+Tested on macOS with the Harness web profile. Windows and Linux are untested.
 
-MIT License. This project is based on [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools), with additional session-level model selection, reasoning-effort routing, capability reporting, and Harness UI integration.
+## License
+
+MIT License. This project started from [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools) and now layers session-level locking, effort routing, capability notices, and toolbar UI on the official 0.1.5 tools.

@@ -1,11 +1,12 @@
 {
   "name": "dsh-subagent-tools-ui",
-  "version": "0.4.9-local",
-  "description": "User-controlled per-session subagent model routing and adaptive reasoning for DeepSeek Harness.",
+  "version": "0.4.11-local",
+  "description": "Per-session user lock for DeepSeek Harness subagent routes, layered on the official 0.1.5 tools.",
   "type": "module",
   "scripts": {
     "build:client": "node scripts/build-client.mjs",
-    "pack:local": "npm run build:client && npm pack"
+    "pack:local": "npm run build:client && npm pack",
+    "test:lock": "node --test test/lock.test.mjs"
   },
   "main": "lib/service-plugin.js",
   "exports": {
@@ -35,20 +36,20 @@
     "delegation"
   ],
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-tools": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-subagent": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-agent": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-llm": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-home-paths": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-typert-protocol": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-session": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-jobs": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-client-ui-conversation": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-client-ui-model-selection": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-client-ui-session": "^0.1.2-alpha.1",
-    "@deepseek-ai/dsh-api-remotes": "^0.1.2-alpha.1",
-    "@deepseek-ai/schemastery": "^3.18.1",
+    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-tools": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-subagent": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-tool-subagent": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-agent": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-llm": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-home-paths": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-typert-protocol": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-session": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-client-ui-conversation": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-client-ui-model-selection": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-client-ui-session": "^0.1.5-rc.1",
+    "@deepseek-ai/dsh-api-remotes": "^0.1.5-rc.1",
+    "@deepseek-ai/schemastery": "^3.18.2",
     "react": "^18.2.0"
   },
   "dependencies": {

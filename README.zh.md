@@ -1,66 +1,62 @@
 # dsh-subagent-toolsUI
 
-为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 提供可由用户控制的子代理模型选择和按任务调整的思考强度。
+为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 0.1.5 及后续版本提供按会话锁定的子代理模型选择。
 
 | [English](README.md) | [中文](README.zh.md) |
 | --- | --- |
 
 ## 界面展示
 
-模型选择器直接集成在 Harness 对话工具栏中，可以继续继承主模型，也可以为后续新建的子代理选择固定模型。
+选择器在对话工具栏里。可以继续继承主模型，也可以为这个会话里之后新建的子代理锁定一个模型。
 
 ![子代理模型选择器](docs/images/subagent-model-selector.png)
 
 ## 功能
 
-- **按会话选择子代理模型。** 选择器直接使用 Harness 的模型目录，并将“继承”固定放在列表顶部。
-- **默认继承主模型。** 新会话不会改变主对话当前使用的模型路由。
-- **为后续子代理锁定模型。** 更改选择后，只影响之后新建的子代理；已经运行的子代理继续使用创建时的模型。
-- **由主 AI 按次选择思考强度。** 每次委派都可以使用当前模型公布的档位，例如 `off`、`high` 或 `max`。
-- **把模型能力提供给主 AI。** 主 AI 可以看到当前路由、可用思考档位以及已确认的图片输入能力。无法确认图片能力时，一律按纯文本模型处理。
-- **适用于 Harness 的各个顶层模式。** 功能不绑定某一个自定义 preset。
-- **遵循 Harness 的界面风格。** 选择器使用原生图标、布局插槽和主题变量，自动适配明暗主题，无需额外仪表盘。
-- **保留原有委派控制。** 每次创建子代理时仍可使用 `persona`、`toolFilter` 和委派后端选择。
+Harness 0.1.5 已经允许主模型从主机白名单里给子代理选模型。这个插件不替换那套官方运行时，只在上面加一层**按会话的用户锁**。
 
-## 与普通 DSH 子代理插件的区别
+- **子代理路由由用户决定。** 默认继承主模型，也可以钉死后续子代理要用的模型。
+- **思考强度仍由主 AI 按次选择。** 每次委派都可以带 `reasoning_effort`（旧的 `reasoningEffort` 也能用）。
+- **spawn 和 fork 都认这把锁。** 用户锁定后，`provider` / `model` 参数不能改路由；fork 也不会偷偷留在主模型上。
+- **真正干活的还是官方工具。** `subagent`、`subagent_fork`、后台/可续跑任务，以及 `list_subagent_models` 仍然来自 `@deepseek-ai/dsh-tool-subagent`。
+- **官方白名单继续生效。** 如果 Harness 设置里打开了子代理模型选择，工具栏只显示允许的路由。
+- **能力提示还在。** 主 AI 能看到当前路由、已公布的思考档位，以及是否明确支持图片输入。无法确认时按纯文本处理。
+- **原来的附加参数还在。** 每次调用仍可使用 `persona`、`toolFilter` 和 `backend`（spawn/fork）。
 
-多数 DSH 子代理扩展停留在静态 preset 或单次调用参数覆盖。本插件把模型路由变成会话中的常规操作：
+改选择器只影响之后新建的子代理，已经在跑的子代理继续用创建时的模型。
 
-- **用户在对话界面选择路由**，无需编辑 preset，也不依赖主 AI 自行填写模型 ID。
-- **主 AI 按任务选择思考强度**，只能使用当前模型实际公布的档位。
-- 模型切换的行为**面向后续任务且可预测**：只影响新建子代理，不会打断或改变正在运行的子代理。
-- 同一套集成可以在不同顶层模式中使用，不必为每个模式维护一份重复的子代理配置。
+## 为什么官方设置替代不了它
 
-这样分工更清晰：用户决定任务交给哪个模型，主 AI 决定每个新子代理需要投入多少推理资源。
+官方 0.1.5 的能力是**全局白名单**。主模型从名单里挑子代理路由，fork 默认继续走主模型。
+
+这个插件是工具栏里的**会话锁**。用户选择继承或固定模型；主 AI 不能自己编一个模型 ID，fork 也要跟这把锁。
+
+两者可以一起用：Harness 限制哪些模型能出现，这个插件决定当前对话实际用哪一个。
 
 ## 安装
-
-使用 Harness 插件命令安装仓库：
 
 ```sh
 dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 ```
 
-可以使用本地克隆目录，也可以使用当前 Harness 支持的 Git 仓库地址。安装后重启 web profile，并新建一个会话。会话在创建时确定插件组合，已经存在的会话可能需要重新打开。
+本地克隆目录，或当前 Harness 支持的 Git 地址都可以。安装后重启 web profile，并新建会话。已经存在的会话会沿用创建时的插件组合。
 
-如果子代理运行时报 `Cannot read properties of undefined (reading 'prepare')`，请检查 Web profile 是否与 Harness 主程序解析到了同一个 `@deepseek-ai/dsh-tools` 包实例。即使版本号相同，两个独立副本也可能包含不同的运行时符号。删除 profile 内重复安装的副本，或将其链接到 Harness 使用的包，然后重启 web profile 并新建会话。不要把私有路径、凭据或会话数据复制到本仓库。
+不要把 agent preset 改成指向这个包。`subagent` / `subagent_fork` 应继续使用 `@deepseek-ai/dsh-tool-subagent`。如果旧版 0.4.10 生成过 `standard-plus` preset，请把默认 preset 改回 `standard`。
 
 ## 使用模型选择器
 
 1. 在对话工具栏打开子代理模型选择器。
-2. 选择“继承”以跟随主模型，或选择一个固定模型供本会话后续新建的子代理使用。
-3. 保持“继承”即可继续使用主模型。选择可以在会话中随时更改，下一次新建的子代理会使用新的选择。
+2. 选“继承”跟随主模型，或选一个固定模型给后续子代理用。
+3. 可以随时改，只有下一次新建的子代理会用新选择。
 
-主 AI 可以在每次新建子代理时设置 `reasoning_effort`（旧提示中的 `reasoningEffort` 仍然支持）。插件不会假定所有模型都有相同档位，只使用当前模型公布的值。例如，DeepSeek V4 Flash 路由可能提供 `off`、`high` 和 `max`。
-
-## 多模态处理
-
-插件会把当前路由是否明确支持图片输入告知主 AI。缺少能力信息或尚未验证时，按纯文本模型处理，避免把需要视觉输入的任务交给未声明图片能力的模型。
+主 AI 可以按任务设置 `reasoning_effort`。只能用当前模型公布的档位。例如 DeepSeek V4 Flash 可能提供 `off`、`high`、`max`。
 
 ## 兼容性
 
-当前版本面向 DeepSeek Harness `0.1.2-alpha.1` 及后续保持 0.1.2 客户端与子代理契约的版本。Web 选择器使用 0.1.2 的会话与模型目录服务，不再注入已删除的 `dsh-client-runtime` 包；服务端工具使用 0.1.2 的 `start`/`startContinuable` 和 `agentOptions` 接口，并在运行时提供 `llm.resolveCallConfig` 时于启动前校验路由。
+当前版本面向 DeepSeek Harness `0.1.5-rc.1`，以及继续保留官方 `dsh-tool-subagent` 模型选择契约的后续版本。它不修改 Harness 源码，不改写 preset，也不替换官方 spawn/fork 运行时。
 
-## 许可证与来源
+目前只在 macOS 的 Harness web profile 上验证过。Windows 和 Linux 未测试。
 
-MIT 许可证。本项目基于 [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools) 开发，并增加了会话级模型选择、思考强度路由、能力信息传递和 Harness 界面集成。
+## 许可证
+
+MIT 许可证。本项目基于 [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools)，现在把会话级锁定、思考强度、能力提示和工具栏选择叠在官方 0.1.5 工具之上。

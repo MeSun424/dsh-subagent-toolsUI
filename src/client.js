@@ -120,6 +120,20 @@ function sameSelection(state, selection) {
     || state.provider === selection.provider && state.model === selection.model
 }
 
+function allowedGroups(groups, selection) {
+  if (!Array.isArray(groups)) return []
+  if (selection?.allowlistEnforced !== true || !Array.isArray(selection.allowedRoutes) || selection.allowedRoutes.length === 0) {
+    return groups
+  }
+  const allowed = new Set(selection.allowedRoutes.map((route) => `${route.provider}/${route.model}`))
+  return groups
+    .map((group) => ({
+      ...group,
+      models: group.models.filter((model) => allowed.has(`${group.id}/${model.id}`)),
+    }))
+    .filter((group) => group.models.length > 0)
+}
+
 function errorText(error) {
   return error instanceof Error ? error.message : String(error)
 }
@@ -226,7 +240,8 @@ function SubagentModelSelect({
   const label = selection.mode === 'inherit' ? '继承' : selection.modelName
   const busy = saving || directoryState.status === 'loading'
   const directoryError = syncError ?? directoryState.error
-  const choices = directoryState.groups.reduce((count, group) => count + group.models.length, 0)
+  const groups = allowedGroups(directoryState.groups, selection)
+  const choices = groups.reduce((count, group) => count + group.models.length, 0)
 
   return React.createElement('div', { className: 'dst-root', ref: rootRef },
     React.createElement('button', {
@@ -267,7 +282,7 @@ function SubagentModelSelect({
       React.createElement('span', { className: 'dst-check' },
         selection.mode === 'inherit' ? React.createElement(IconCheck) : null))),
     React.createElement('div', { className: 'dst-groups scrollable' },
-      directoryState.groups.map((group) => React.createElement('section', {
+      groups.map((group) => React.createElement('section', {
         key: group.id,
         className: 'dst-group',
         role: 'group',
@@ -302,7 +317,7 @@ function SubagentModelSelect({
         : null)))
 }
 
-export const inject = ['remote', 'connection', 'slots', 'sessions', 'modelDirectories']
+export const inject = ['remote', 'remote.session', 'connection', 'slots', 'sessions', 'modelDirectories']
 
 export async function apply(ctx) {
   installStyles()

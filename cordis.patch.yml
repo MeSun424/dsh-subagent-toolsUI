@@ -1,11 +1,10 @@
 # dsh-subagent-tools-ui bundle patch.
 #
-# Installs the process-level model-selection service and Web client. The service
-# shadows `subagent` and `subagent_fork` inside every top-level Agent scope, so
-# all modes use the same routing without editing any preset or official package.
+# Installs the process-level session-lock service and Web client. The service
+# wraps official `subagent` / `subagent_fork` tools and `subagents.start*`.
+# It does not replace @deepseek-ai/dsh-tool-subagent or rewrite agent presets.
 #
 # Install: dsh plugin --profile web add <this package>
-#   (npm registry, a local path, or github:owner/repo#ref)
 # Restart `dsh --profile web` after installing.
 
 - insert:

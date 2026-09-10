@@ -21,3 +21,9 @@ secrets.json
 .reverse-work/
 .dsh/
 coverage/
+
+# Local pack artifacts
+*.tgz
+
+# Generated local packs kept out of git
+dist/
