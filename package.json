@@ -1,6 +1,6 @@
 {
   "name": "dsh-subagent-tools-ui",
-  "version": "0.4.12-local",
+  "version": "0.5.0-local",
   "description": "Per-session user lock for DeepSeek Harness subagent routes, layered on the official 0.1.5 tools.",
   "type": "module",
   "scripts": {

@@ -42,6 +42,22 @@ dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 
 主模型创建子代理时可以带 `reasoning_effort`。只能用当前模型公布过的档位，比如 DeepSeek V4 Flash 上的 `off`、`high`、`max`。
 
+## 和实验性 Agent Teams 共存
+
+装了 `@deepseek-ai/dsh-experimental-agent-team-profile` 之后，Agent Teams 会在团队成员作用域里用同名工具顶掉官方的 `send_message`、`list_agents`、`interrupt_agent`，而会话根永远就是 Lead，所以这三个工具对**普通子代理**就不再生效了（不能再中途指挥，也列不出来）。
+
+这不是插件坏了，也不是可以"抢回名字"的事——同层重名会直接报错，而且作用域注册天然比全局更近。本插件改为用已经注入的 `subagents` 服务**自己实现**这三个工具的等价版本，换成不冲突的名字：
+
+| 工具 | 等价于官方 | 参数 |
+|---|---|---|
+| `steer_subagent` | `send_message` | `agent_id`、`message` |
+| `list_subagents` | `list_agents` | 无 |
+| `stop_subagent` | `interrupt_agent` | `agent_id` |
+
+- 只在检测到 Agent Teams 时才注册；**没装 Agent Teams 的环境行为完全不变**。
+- 三个工具对普通子代理和 teammate 都有效。
+- 注意参数名不同：官方旧工具用 `agent_id`，Agent Teams 的同名工具用 `target`（成员名），两套不要混用。
+
 ## 其他
 
 目前只在 macOS 的 Harness 网页版上用过。Windows 和 Linux 没测。
