@@ -1,5 +1,6 @@
 import React from 'react'
 import TYPERT_REMOTE from '../lib/typert.remote-client.js'
+import { isTopLevelSession } from './session-visibility.js'
 
 // Harness 0.1.2 no longer ships the old primitives package. Keep these
 // small controls self-contained so the selector bundle has no stale UI import.
@@ -337,7 +338,7 @@ export async function apply(ctx) {
       }
       return {
         sessionId,
-        visible: true,
+        visible: isTopLevelSession(ctx.sessions, sessionId),
         directory: directory.store,
         loadDirectory: () => directory.load(),
         getSelection: async () => unwrap(
@@ -353,30 +354,7 @@ export async function apply(ctx) {
     },
   }, SubagentModelSelect))
 
-  ctx.effect(() => {
-    let disposeSelector
-    let mounted = false
-    const sync = () => {
-      const state = ctx.sessions.list.getSnapshot()
-      const sessionId = state.current
-      const summary = sessionId === undefined ? undefined : state.byId[sessionId]
-      const shouldMount = sessionId !== undefined
-        && summary?.origin !== 'subagent'
-        && ctx.sessions.subagentAddress(sessionId) === undefined
-      if (shouldMount === mounted) return
-      mounted = shouldMount
-      if (shouldMount) {
-        disposeSelector = registerSelector()
-      } else {
-        disposeSelector?.()
-        disposeSelector = undefined
-      }
-    }
-    const unsubscribe = ctx.sessions.list.subscribe(sync)
-    sync()
-    return () => {
-      unsubscribe()
-      disposeSelector?.()
-    }
-  }, 'dsh-subagent-tools-ui: top-level selector visibility')
+  // Desktop 0.2 keeps view selection outside sessions.list. Register one
+  // session-scoped contribution; each rendered conversation supplies its own id.
+  registerSelector()
 }

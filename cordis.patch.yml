@@ -1,11 +1,12 @@
 # dsh-subagent-tools-ui bundle patch.
 #
-# Installs the process-level session-lock service and Web client. The service
+# Installs the process-level session-lock service and shared Desktop/Web client. The service
 # wraps official `subagent` / `subagent_fork` tools and `subagents.start*`.
 # It does not replace @deepseek-ai/dsh-tool-subagent or rewrite agent presets.
 #
-# Install: dsh plugin --profile web add <this package>
-# Restart `dsh --profile web` after installing.
+# Desktop: use the Plugins page or the bundled CLI with --profile desktop.
+# Web: dsh plugin --profile web add <this package>
+# Restart Harness after installing.
 
 - insert:
     - id: subagent-tools-service

@@ -24,13 +24,25 @@ Harness 0.1.5 可以让主模型给子代理选模型，但那是全局名单，
 
 ## 安装
 
-需要 DeepSeek Harness 0.1.5 或更高版本。
+支持 DeepSeek Harness 桌面版 0.2.0-rc.2，也兼容 0.1.5 网页版。
+
+### 桌面版
+
+在左侧「插件」页面，用本地 `.tgz` 安装包安装。安装完成后退出并重新打开 Harness。
+
+macOS 也可以使用桌面版自带的命令安装下载好的包：
+
+```sh
+"/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh" plugin --profile desktop add /path/to/dsh-subagent-tools-ui-0.6.0.tgz
+```
+
+### 网页版
 
 ```sh
 dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 ```
 
-装完重启 web profile，再开一个新对话。旧对话还是创建时的状态。
+装完重启 Harness，再打开对话。子代理选择器在输入框右侧，主模型选择器旁边。
 
 如果以前的版本生成过 `standard-plus` preset，把默认 preset 改回 `standard`。官方子代理工具不用改。
 
@@ -60,6 +72,6 @@ dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 
 ## 其他
 
-目前只在 macOS 的 Harness 网页版上用过。Windows 和 Linux 没测。
+已在 macOS 的 Harness 桌面版 0.2.0-rc.2 上验证。Windows 和 Linux 尚未测试。
 
 MIT 许可证。基于 [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools)。

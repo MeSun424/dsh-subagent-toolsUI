@@ -30,6 +30,7 @@ const args = [
   '--format=cjs',
   '--platform=browser',
   '--target=es2022',
+  '--minify',
   '--external:react',
   `--alias:zod=${zodEntry}`,
   '--banner:js=window.__ModuleLoader__.load({id:"dsh-subagent-tools-ui",factory:(require)=>{var module={exports:{}};var exports=module.exports;',

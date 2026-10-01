@@ -88,3 +88,25 @@ test('official tool args never carry locked route or effort fields', () => {
     run_in_background: true,
   })
 })
+
+test('inherit route follows Desktop pending selection and last request', async () => {
+  const { parentModelRoute } = await import('../lib/lock.js')
+  const agent = {
+    options: { provider: 'old', model: 'created' },
+    session: { requestHeader: () => ({ config: { provider: 'live', model: 'used' } }) },
+  }
+  assert.deepEqual(parentModelRoute(agent), { provider: 'live', model: 'used' })
+  const ctx = { get: (name) => name === 'sessionProjections'
+    ? { stateOf: () => ({ pending: { provider: 'new', model: 'picked' } }) }
+    : undefined }
+  assert.deepEqual(parentModelRoute(agent, ctx), { provider: 'new', model: 'picked' })
+})
+
+test('blank Desktop chat inherits configured default model', async () => {
+  const { parentModelRoute } = await import('../lib/lock.js')
+  const agent = { options: {}, session: {} }
+  const ctx = { get: (name) => name === 'agentDefaultModel'
+    ? { currentSelection: () => ({ provider: 'default', model: 'chat' }) }
+    : undefined }
+  assert.deepEqual(parentModelRoute(agent, ctx), { provider: 'default', model: 'chat' })
+})

@@ -11,7 +11,7 @@ echo "dsh-subagent-tools-ui 0.4.11+ does not replace official subagent tools."
 echo "Keep the default Harness preset (usually standard)."
 echo
 echo "If an older install created ~/.dsh/.agent-presets/standard-plus, switch"
-echo "the default preset back to standard in Harness settings, then restart:"
-echo "  dsh web --host 127.0.0.1 --port 8081"
+echo "the default preset back to standard in Harness settings, then restart Harness."
+echo "  Desktop: quit and reopen the app. Web: restart the web profile."
 echo
 echo "No preset files were changed."

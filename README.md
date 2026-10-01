@@ -24,13 +24,25 @@ A change only applies to subagents created after that. Ones already running keep
 
 ## Install
 
-Needs DeepSeek Harness 0.1.5 or later.
+Supports DeepSeek Harness Desktop 0.2.0-rc.2 and the 0.1.5 web profile.
+
+### Desktop
+
+Install the local `.tgz` package from the Plugins page in the sidebar, then quit and reopen Harness.
+
+On macOS, you can also use the command bundled with Desktop:
+
+```sh
+"/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh" plugin --profile desktop add /path/to/dsh-subagent-tools-ui-0.6.0.tgz
+```
+
+### Web
 
 ```sh
 dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 ```
 
-Restart the web profile, then open a new chat. Older chats keep whatever they were created with.
+Restart Harness and open a chat. The subagent selector appears beside the main model selector on the right of the input toolbar.
 
 If an older version of this plugin created a `standard-plus` preset, switch the default preset back to `standard`. Leave the official subagent tools as they are.
 
@@ -44,6 +56,6 @@ When the main model starts a subagent, it can set `reasoning_effort`. Use a valu
 
 ## Notes
 
-This has been used on macOS with the Harness web profile. Windows and Linux have not been tested.
+Verified on macOS with Harness Desktop 0.2.0-rc.2. Windows and Linux have not been tested.
 
 MIT license. Based on [lynx-gt/dsh-subagent-tools](https://github.com/lynx-gt/dsh-subagent-tools).
