@@ -6,7 +6,7 @@ const executable = resolve(app, 'Contents/MacOS/DeepSeek Harness')
 const runtime = resolve(app, 'Contents/Resources/app.asar/dsh')
 const child = spawn(executable, [
   '--expose-internals', '--import', './scripts/desktop-test-hook.mjs',
-  '--test', 'test/desktop.integration.mjs',
+  '--test', 'test/desktop.integration.mjs', 'test/lifecycle.integration.mjs',
 ], {
   cwd: new URL('..', import.meta.url),
   env: { ...process.env, ELECTRON_RUN_AS_NODE: '1', DSH_DESKTOP_RUNTIME: runtime },

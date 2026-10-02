@@ -91,6 +91,8 @@ test('plugin leaves Desktop root model selection owned by the host', () => {
   applyService({
     get: () => selection,
     plugin() {},
+    inject(_services, callback) { callback(this) },
+    effect(callback) { callback() },
     on: (name, callback) => { if (name === 'agent/created') onCreated = callback },
   })
   onCreated({ agent: { ...parent, ctx: { plugin() {}, on() { modelHooks++; return () => {} } } } })

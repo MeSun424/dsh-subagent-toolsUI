@@ -33,7 +33,7 @@ Harness 0.1.5 可以让主模型给子代理选模型，但那是全局名单，
 macOS 也可以使用桌面版自带的命令安装下载好的包：
 
 ```sh
-"/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh" plugin --profile desktop add /path/to/dsh-subagent-tools-ui-0.6.0.tgz
+"/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh" plugin --profile desktop add /path/to/dsh-subagent-tools-ui-0.6.2.tgz
 ```
 
 ### 网页版

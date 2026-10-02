@@ -33,7 +33,7 @@ Install the local `.tgz` package from the Plugins page in the sidebar, then quit
 On macOS, you can also use the command bundled with Desktop:
 
 ```sh
-"/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh" plugin --profile desktop add /path/to/dsh-subagent-tools-ui-0.6.0.tgz
+"/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh" plugin --profile desktop add /path/to/dsh-subagent-tools-ui-0.6.2.tgz
 ```
 
 ### Web

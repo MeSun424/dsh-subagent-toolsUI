@@ -1,6 +1,6 @@
 {
   "name": "dsh-subagent-tools-ui",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "Per-session subagent model selection for DeepSeek Harness Desktop 0.2.0 and Web.",
   "type": "module",
   "scripts": {
@@ -39,6 +39,7 @@
   ],
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-scope": "^0.1.5-rc.1 || 0.2.0-rc.2 || ^0.2.0",
     "@deepseek-ai/dsh-tools": "^0.1.5-rc.1 || 0.2.0-rc.2 || ^0.2.0",
     "@deepseek-ai/dsh-subagent": "^0.1.5-rc.1 || 0.2.0-rc.2 || ^0.2.0",
     "@deepseek-ai/dsh-tool-subagent": "^0.1.5-rc.1 || 0.2.0-rc.2 || ^0.2.0",
