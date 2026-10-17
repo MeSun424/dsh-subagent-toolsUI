@@ -10,7 +10,7 @@
 
 ## 安装
 
-当前适配 DeepSeek Harness 桌面版 `0.2.0-rc.2` 和网页版 `0.1.5`；桌面版已在 macOS 上验证。
+当前适配 DeepSeek Harness 桌面版 `0.2.1-rc.2` 和网页版 `0.1.5`；桌面版已在 macOS 上验证。
 
 ### 桌面版
 
@@ -60,6 +60,12 @@ dsh plugin --profile web add github:MeSun424/dsh-subagent-toolsUI
 选择器设置的是模型，推理强度仍由主模型在派遣时根据任务和所选模型的能力决定。插件也会向主模型提供可确认的图片输入能力；能力未知时按文本模型处理。
 
 启用 Harness 的子智能体模型白名单后，可选模型会受该名单限制。
+
+### 子智能体预设
+
+在 Harness `0.2.1` 中，需要为子智能体配置不同角色或工具时，请使用 Agent Preset。已允许选择预设的普通派遣工具可通过 `agent_preset` 指定预设；fork 沿用父会话的预设。
+
+本插件 `0.7.0` 已适配新版派遣接口。新版 Harness 不再使用插件旧的 `persona`、`toolFilter` 派遣参数；`backend` 后端选择和每次派遣的推理强度设置继续可用。
 
 ### 与 Agent Teams 配合使用
 

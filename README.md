@@ -10,7 +10,7 @@ Your choice is saved per conversation and applies to subagents created through b
 
 ## Installation
 
-Compatible with DeepSeek Harness Desktop `0.2.0-rc.2` and Web `0.1.5`. Desktop compatibility has been verified on macOS.
+Compatible with DeepSeek Harness Desktop `0.2.1-rc.2` and Web `0.1.5`. Desktop compatibility has been verified on macOS.
 
 ### Desktop
 
@@ -60,6 +60,12 @@ You can change the selection at any time. **Changes apply only to subagents crea
 The selector controls the model. The main model still chooses reasoning effort for each delegation according to the task and the selected model's capabilities. The plugin also provides confirmed image-input capabilities to the main model; unknown image support is treated as text-only.
 
 If you enable Harness's subagent model allowlist, the available choices are restricted to that list.
+
+### Subagent presets
+
+In Harness `0.2.1`, use Agent Presets to configure a child’s role or tools. A regular delegation tool with preset selection enabled accepts `agent_preset`; fork retains the parent conversation’s preset.
+
+Plugin version `0.7.0` supports the new delegation interface. The legacy `persona` and `toolFilter` delegation parameters are no longer used with newer Harness versions. The `backend` override and per-call reasoning effort remain available.
 
 ### Using Agent Teams
 

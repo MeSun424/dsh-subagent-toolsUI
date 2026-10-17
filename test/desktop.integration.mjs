@@ -38,6 +38,7 @@ function selectionHarness(lock) {
   const runtime = {
     start: async (provider, request) => { requests.push({ provider, request }); return {} },
     startContinuable: async (spec) => { requests.push(spec); return { childId: 'child' } },
+    startActivation: async (spec) => { requests.push(spec); return { childId: 'child' } },
     getProvider: () => ({}),
   }
   const service = Object.create(SubagentSelectionService.prototype)
@@ -54,9 +55,10 @@ function selectionHarness(lock) {
 for (const backend of ['spawn', 'fork']) {
   test(`Desktop ${backend} and continuable children honor the same fixed route`, async () => {
     const { runtime, requests } = selectionHarness({ mode: 'fixed', provider: 'child', model: 'chosen' })
-    await callContext.run({ extras: { reasoningEffort: 'low' } }, async () => {
+    await callContext.run({ parentId: parent.id, extras: { reasoningEffort: 'low' } }, async () => {
       await runtime.start(backend, { parent })
       await runtime.startContinuable({ provider: backend, request: { parent } })
+      await runtime.startActivation({ provider: backend, request: { parent }, signal: new AbortController().signal })
     })
     for (const entry of requests) {
       const options = resolveChildAgentOptions(parent, entry.request.agentOptions, 1)
@@ -100,7 +102,7 @@ test('plugin leaves Desktop root model selection owned by the host', () => {
 })
 
 for (const backend of ['spawn', 'fork']) {
-  test(`official Desktop ${backend} tool keeps extras and the user route through execute validation`, async () => {
+  test(`official Desktop ${backend} activation tool applies the user model and effort`, async () => {
     const { apply: applyOfficial } = await import('@deepseek-ai/dsh-tool-subagent')
     const { apply: applyLock } = await import('../lib/index.js')
     const requests = []
@@ -109,7 +111,7 @@ for (const backend of ['spawn', 'fork']) {
     const runtime = {
       getProvider: () => provider,
       resolveMaxDepth: () => undefined,
-      startContinuable: async (spec) => { requests.push(spec); return { childId: 'child' } },
+      startActivation: async (spec) => { requests.push(spec); return { childId: 'child' } },
       start: async (kind, request) => { requests.push({ provider: kind, request }); return {} },
     }
     const selection = Object.create(SubagentSelectionService.prototype)
@@ -122,7 +124,8 @@ for (const backend of ['spawn', 'fork']) {
       agents: { list: () => [] },
       llm: { resolveCallConfig: async () => ({}) },
       sessionProjections: { register() {} },
-      systemPrompt: { section() {}, getSectionOrder: () => 2800 },
+      systemPrompt: { section() {}, context() {}, getSectionOrder: () => 2800, getContextOrder: () => 100 },
+      effect: (callback) => callback(),
       on() {},
       get(name) { return name === 'subagentTools' ? selection : this[name] },
     }
@@ -132,17 +135,20 @@ for (const backend of ['spawn', 'fork']) {
     selection.addMultimodalModels = () => {}
     const toolName = backend === 'spawn' ? 'subagent' : 'subagent_fork'
     applyLock(ctx, { toolName })
-    applyOfficial(ctx, { provider: backend, toolName, backgroundMode: 'continuable' })
+    await applyOfficial(ctx, { provider: backend, toolName })
     const tool = definitions.get(toolName)
     assert.ok(tool.parameters.properties.reasoning_effort)
     const result = await tool.execute({
       description: 'compatibility test', prompt: 'no model request',
-      reasoning_effort: 'low', persona: 'review carefully', toolFilter: { deny: ['bash'] },
+      reasoning_effort: 'low',
     }, { agent: parent, signal: new AbortController().signal })
     assert.equal(result.subagentId, 'child')
     assert.deepEqual(requests[0].request.agentOptions, { provider: 'locked', model: 'chosen', reasoningEffort: 'low' })
-    assert.equal(requests[0].request.persona, 'review carefully')
-    assert.deepEqual(requests[0].request.toolFilter, { deny: ['bash'] })
+    assert.equal(requests[0].request.persona, undefined)
+    assert.equal(requests[0].request.toolFilter, undefined)
+    assert.equal(tool.parameters.properties.persona, undefined)
+    assert.equal(tool.parameters.properties.toolFilter, undefined)
+    await assert.rejects(tool.execute({ description: 'Legacy argument', prompt: 'Task', persona: 'old persona' }, { agent: parent }), /Agent Preset/)
   })
 }
 

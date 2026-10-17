@@ -77,6 +77,7 @@ test('disposed tool definitions should leave the shared selection registry', asy
 test('actual Desktop starts use the replacement selection service after disposal', async () => {
   const ctx = new Context()
   new Tools(ctx); new Agents(ctx); new Llm(ctx); new Prompt(ctx)
+  ctx.agents.get = (id) => id === parent.id ? parent : undefined
   new SubagentRuntime(ctx, { maxDepth: { get: () => 1 }, maxActiveSubagents: { get: () => 8 } })
   ctx.subagents.registerProvider({
     name: 'spawn', capabilities: {},
@@ -91,7 +92,13 @@ test('actual Desktop starts use the replacement selection service after disposal
   await owner.dispose()
   const newOwner = await ctx.plugin(SelectionOwner)
   const second = await ctx.plugin(Lock)
-  await ctx.subagents.start('spawn', { parent, prompt: [], signal: new AbortController().signal })
+  // Keep the real runtime's provider/capability/live-parent validation while
+  // replacing only its final manager dispatch; no real model or child is run.
+  const requests = []
+  ctx.subagents.manager = { startExternal: async (spec) => { requests.push(spec); return { childId: 'test-child' } } }
+  await ctx.subagents.startActivation({ provider: 'spawn', request: { parent, prompt: [] }, signal: new AbortController().signal, delivery: 'caller' })
+  assert.equal(requests.length, 1)
+  assert.equal(typeof ctx.subagents[Symbol.for('cordis.original')].start, 'undefined')
   await second.dispose()
   await newOwner.dispose()
 })
